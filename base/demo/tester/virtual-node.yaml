@@ -6,7 +6,7 @@ metadata:
   labels:
     app: flagger-loadtester
 spec:
-  meshName: "{{ .ClusterName }}"
+  meshName: "appmesh"
   listeners:
     - portMapping:
         port: 444
