@@ -14,6 +14,8 @@ spec:
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "8080"
+        # exclude ingress ports from App Mesh
+        appmesh.k8s.aws/ports: "444"
       labels:
         app: flagger-loadtester
     spec:
