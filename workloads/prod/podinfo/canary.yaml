@@ -4,6 +4,7 @@ metadata:
   name: podinfo
   namespace: prod
 spec:
+  provider: appmesh
   # deployment reference
   targetRef:
     apiVersion: apps/v1
