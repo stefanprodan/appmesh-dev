@@ -29,13 +29,6 @@ data:
                       virtual_hosts:
                         - name: local_service
                           domains: ["*"]
-                          request_headers_to_add:
-                            - header:
-                                key: l5d-dst-override
-                                value: podinfo.prod.svc.cluster.local:9898
-                          request_headers_to_remove:
-                            - l5d-remote-ip
-                            - l5d-server-id
                           routes:
                             - match:
                                 prefix: "/"
@@ -59,7 +52,7 @@ data:
                   - endpoint:
                       address:
                         socket_address:
-                          address: podinfo.prod.svc.cluster.local
+                          address: podinfo.prod
                           port_value: 9898
 
     admin:

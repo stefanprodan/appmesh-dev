@@ -24,6 +24,7 @@ spec:
         prometheus.io/scrape: "true"
         # exclude ingress ports from App Mesh
         appmesh.k8s.aws/ports: "444"
+        revision: "v1.11.1-test.1"
     spec:
       terminationGracePeriodSeconds: 30
       containers:
