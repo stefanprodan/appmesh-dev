@@ -14,3 +14,7 @@ spec:
       create: true
       name: "appmesh"
       discovery: dns
+    sidecar:
+      image:
+        repository: 840364872350.dkr.ecr.us-west-2.amazonaws.com/aws-appmesh-envoy
+        tag: v1.11.2.0-prod
