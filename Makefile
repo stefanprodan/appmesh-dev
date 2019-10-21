@@ -1,5 +1,5 @@
 prep:
-	kustomize-prep.sh
+	./kustomize-prep.sh
 
 sync:
 	git add -A && \
