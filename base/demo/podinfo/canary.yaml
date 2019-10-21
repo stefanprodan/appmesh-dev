@@ -43,6 +43,11 @@ spec:
     # canary increment step
     # percentage (0-100)
     stepWeight: 5
+    interations: 10
+    match:
+      - headers:
+          user-agent:
+            regex: ".*Chrome.*"
     # App Mesh Prometheus checks
     metrics:
       - name: request-success-rate
