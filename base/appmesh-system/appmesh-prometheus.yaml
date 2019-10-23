@@ -11,3 +11,5 @@ spec:
     path: stable/appmesh-prometheus
   values:
     retention: 2h
+    persistentVolumeClaim:
+      claimName: prometheus
