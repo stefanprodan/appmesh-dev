@@ -1,0 +1,58 @@
+{{- if .Values.discovery.enabled }}
+{{- $image := .Values.discovery.deployment.image }}
+{{- if .Values.global  }}
+{{- $image = merge .Values.discovery.deployment.image .Values.global.image }}
+{{- end }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: gloo
+    gloo: discovery
+  name: discovery
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.discovery.deployment.replicas }}
+  selector:
+    matchLabels:
+      gloo: discovery
+  template:
+    metadata:
+      labels:
+        gloo: discovery
+      {{- if .Values.discovery.deployment.stats }}
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "9091"
+        prometheus.io/scrape: "true"
+      {{- end}}
+    spec:
+      serviceAccountName: discovery
+      containers:
+      - image: {{template "gloo.image" $image}}
+        imagePullPolicy: {{ $image.pullPolicy }}
+        name: discovery
+{{- if .Values.discovery.deployment.resources }}
+        resources:
+{{ toYaml .Values.discovery.deployment.resources | indent 10}}
+{{- end}}
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          {{- if not .Values.discovery.deployment.floatingUserId }}
+          runAsUser: {{ printf "%.0f" .Values.discovery.deployment.runAsUser -}}
+          {{- end }}
+          capabilities:
+            drop:
+            - ALL
+        env:
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+        {{- if .Values.discovery.deployment.stats }}
+          - name: START_STATS_SERVER
+            value: "true"
+        {{- end}}
+{{- end }}

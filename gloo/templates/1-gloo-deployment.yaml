@@ -1,0 +1,81 @@
+{{- $image := .Values.gloo.deployment.image }}
+{{- if .Values.global  }}
+{{- $image = merge .Values.gloo.deployment.image .Values.global.image }}
+{{- end }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: gloo
+    gloo: gloo
+  name: gloo
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.gloo.deployment.replicas }}
+  selector:
+    matchLabels:
+      gloo: gloo
+  template:
+    metadata:
+      labels:
+        gloo: gloo
+      {{- if .Values.gloo.deployment.stats }}
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "9091"
+        prometheus.io/scrape: "true"
+      {{- end}}
+    spec:
+      serviceAccountName: gloo
+      containers:
+      - image: {{template "gloo.image" $image }}
+        imagePullPolicy: {{ $image.pullPolicy }}
+        name: gloo
+{{- if .Values.gloo.deployment.resources }}
+        resources:
+{{ toYaml .Values.gloo.deployment.resources | indent 10}}
+{{- else}}
+        resources:
+          requests:
+            cpu: 500m
+            memory: 256Mi
+{{- end}}
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          {{- /* set floatingUserId to true in the helm install to let the pod be assigned a dynamic user ID */ -}}
+          {{- /* see https://github.com/helm/helm/issues/1707#issuecomment-520357573 */ -}}
+          {{- /* the user id may be set quite high -- openshift wants userids that may get printed as scientific notation */}}
+          {{- if not .Values.gloo.deployment.floatingUserId }}
+          runAsUser: {{ printf "%.0f" .Values.gloo.deployment.runAsUser -}}
+          {{- end }}
+          capabilities:
+            drop:
+            - ALL
+        ports:
+        - containerPort: {{ .Values.gloo.deployment.xdsPort }}
+          name: grpc-xds
+          protocol: TCP
+        - containerPort: {{ .Values.gloo.deployment.validationPort }}
+          name: grpc-validation
+          protocol: TCP
+        env:
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+        {{- if .Values.gloo.deployment.stats }}
+          - name: START_STATS_SERVER
+            value: "true"
+        {{- end}}
+        readinessProbe:
+          tcpSocket:
+            port: {{ .Values.gloo.deployment.xdsPort }}
+          initialDelaySeconds: 1
+          periodSeconds: 2
+          failureThreshold: 10
+      {{- if $image.pullSecret }}
+      imagePullSecrets:
+        - name: {{ $image.pullSecret }}
+      {{- end}}

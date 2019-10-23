@@ -1,0 +1,76 @@
+{{- if .Values.ingress.enabled }}
+{{- $image := .Values.gateway.deployment.image }}
+{{- if .Values.global  }}
+{{- $image = merge .Values.ingressProxy.deployment.image .Values.global.image }}
+{{- end }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: gloo
+    gloo: ingress-proxy
+  name: ingress-proxy
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.ingressProxy.deployment.replicas }}
+  selector:
+    matchLabels:
+      gloo: ingress-proxy
+  template:
+    metadata:
+      labels:
+        gloo: ingress-proxy
+{{- if .Values.ingressProxy.deployment.extraAnnotations }}
+      annotations:
+      {{- range $key, $value := .Values.ingressProxy.deployment.extraAnnotations }}
+        {{ $key }}: {{ $value | quote }}
+      {{- end }}
+{{- end }}
+    spec:
+      containers:
+      - args: ["--disable-hot-restart"]
+        env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        image: {{template "gloo.image" $image}}
+        imagePullPolicy: {{ $image.pullPolicy }}
+        name: ingress-proxy
+{{- if .Values.ingressProxy.deployment.resources }}
+        resources:
+{{ toYaml .Values.ingressProxy.deployment.resources | indent 10}}
+{{- end}}
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+            add:
+            - NET_BIND_SERVICE
+        ports:
+        - containerPort: {{ .Values.ingressProxy.deployment.httpPort }}
+          name: http
+          protocol: TCP
+        - containerPort: {{ .Values.ingressProxy.deployment.httpsPort }}
+          name: https
+          protocol: TCP
+{{- with .Values.ingressProxy.deployment.extraPorts }}
+{{toYaml  . | indent 8}}{{- end }}
+        volumeMounts:
+        - mountPath: /etc/envoy
+          name: envoy-config
+      {{- if $image.pullSecret }}
+      imagePullSecrets:
+        - name: {{ $image.pullSecret }}{{end}}
+      volumes:
+      - configMap:
+          name: ingress-envoy-config
+        name: envoy-config
+
+{{- end }}

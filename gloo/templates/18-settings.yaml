@@ -1,0 +1,69 @@
+{{ if .Values.settings.create }}
+
+apiVersion: gloo.solo.io/v1
+kind: Settings
+metadata:
+  labels:
+    app: gloo
+  name: default
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "5"
+spec:
+  gloo:
+   xdsBindAddr: 0.0.0.0:{{ .Values.gloo.deployment.xdsPort }}
+{{- if .Values.settings.writeNamespace }}
+  discoveryNamespace: {{ .Values.settings.writeNamespace }}
+{{- else }}
+  discoveryNamespace: {{ .Release.Namespace }}
+{{- end }}
+  kubernetesArtifactSource: {}
+  kubernetesConfigSource: {}
+  kubernetesSecretSource: {}
+  refreshRate: 60s
+{{- if .Values.settings.integrations.knative.enabled }}
+  knative:
+{{- if (regexMatch "[0-9]+[.][0-7]+[.][0-9]+" .Values.settings.integrations.knative.version ) }}
+    clusterIngressProxyAddress: "clusteringress-proxy.{{ .Release.Namespace }}.svc.{{ $.Values.k8s.clusterName}}"
+{{- else }}
+    knativeExternalProxyAddress: "knative-external-proxy.{{ .Release.Namespace }}.svc.{{ $.Values.k8s.clusterName}}"
+    knativeInternalProxyAddress: "knative-internal-proxy.{{ .Release.Namespace }}.svc.{{ $.Values.k8s.clusterName}}"
+{{- end }}
+{{- end }}
+
+{{- if .Values.gateway.validation }}
+  gateway:
+    validation:
+      proxyValidationServerAddr: gloo:{{ .Values.gloo.deployment.validationPort }}
+{{- /* need to do this weird if/else because Helm cannot differentiate between 'false' and 'unset' */}}
+{{- if .Values.gateway.validation.alwaysAcceptResources }}
+      alwaysAccept: true
+{{- else }}
+      alwaysAccept: false
+{{- end }}
+{{- end }}
+
+{{- if ne .Values.discovery.fdsMode "" }}
+  discovery:
+    fdsMode: {{.Values.discovery.fdsMode}}
+{{- end }}
+
+{{- if .Values.settings.extensions }}
+  extensions:
+{{- toYaml .Values.settings.extensions | nindent 4 }}
+{{- end }}
+
+{{- if .Values.settings.singleNamespace }}
+  watchNamespaces:
+  - {{ .Release.Namespace }}
+{{- else }}
+{{- with .Values.settings.watchNamespaces }}
+  watchNamespaces:
+  {{- range . }}
+  - {{ . }}
+  {{- end }}
+{{- end }}
+{{- end }}
+
+{{- end }}
