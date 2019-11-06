@@ -27,13 +27,13 @@ spec:
     spec:
       containers:
       - name: podinfod
-        image: stefanprodan/podinfo:3.1.0
+        image: stefanprodan/podinfo:3.1.1
         imagePullPolicy: IfNotPresent
         env:
           - name: PODINFO_UI_LOGO
             value: https://eks.handson.flagger.dev/cuddle_clap.gif
           - name: PODINFO_UI_COLOR
-            value: "indigo lighten-1"
+            value: "#34577c"
         ports:
         - containerPort: 9898
           name: http
