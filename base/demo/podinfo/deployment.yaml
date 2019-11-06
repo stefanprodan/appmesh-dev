@@ -33,7 +33,7 @@ spec:
           - name: PODINFO_UI_LOGO
             value: https://eks.handson.flagger.dev/cuddle_clap.gif
           - name: PODINFO_UI_COLOR
-            value: "#1C567F"
+            value: "indigo darken-3"
         ports:
         - containerPort: 9898
           name: http
