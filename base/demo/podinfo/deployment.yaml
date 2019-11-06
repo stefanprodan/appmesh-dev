@@ -31,7 +31,7 @@ spec:
         imagePullPolicy: IfNotPresent
         env:
           - name: PODINFO_UI_LOGO
-            value: https://raw.githubusercontent.com/weaveworks/eks-appmesh-profile/website/logo/amazon-eks.png
+            value: https://eks.handson.flagger.dev/cuddle_clap.gif
           - name: PODINFO_UI_COLOR
             value: "#1C567F"
         ports:
