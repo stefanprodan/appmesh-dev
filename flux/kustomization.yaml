@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- flux-account.yaml
+- flux-deployment.yaml
+- flux-helm-operator-account.yaml
+- flux-helm-release-crd.yaml
+- flux-namespace.yaml
+- flux-secret.yaml
+- helm-operator-deployment.yaml
+- memcache-dep.yaml
+- memcache-svc.yaml
+- tiller-ca-cert-configmap.yaml
+- tiller-dep.yaml
+- tiller-rbac.yaml
+- tiller-svc.yaml

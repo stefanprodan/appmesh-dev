@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- appmesh-system/appmesh-controller.yaml
+- appmesh-system/appmesh-crds.yaml
+- appmesh-system/appmesh-grafana.yaml
+- appmesh-system/appmesh-inject.yaml
+- appmesh-system/appmesh-prometheus.yaml
+- appmesh-system/flagger-crds.yaml
+- appmesh-system/flagger.yaml
+- appmesh-system/namespace.yaml
+- demo/ingress/appmesh-gateway.yaml
+- demo/namespace.yaml
+- demo/podinfo/canary.yaml
+- demo/podinfo/deployment.yaml
+- demo/podinfo/hpa.yaml
+- demo/tester/deployment.yaml
+- demo/tester/service.yaml
+- demo/tester/virtual-node.yaml
+- kube-system/metrics-server.yaml
