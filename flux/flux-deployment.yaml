@@ -151,6 +151,7 @@ spec:
         - --git-poll-interval=1m
         - --sync-interval=1m
         - --automation-interval=1m
+        - --registry-exclude-image=*
 
         # Include these two to enable git commit signing
         # - --git-gpg-key-import=/root/gpg-import
