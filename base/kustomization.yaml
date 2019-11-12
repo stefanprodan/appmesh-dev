@@ -18,3 +18,4 @@ resources:
 - demo/tester/service.yaml
 - demo/tester/virtual-node.yaml
 - kube-system/metrics-server.yaml
+- appmesh-system/prometheus-adapter.yaml
