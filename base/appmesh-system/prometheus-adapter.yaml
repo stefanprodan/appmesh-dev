@@ -1,0 +1,15 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: prometheus-adapter
+  namespace: appmesh-system
+spec:
+  releaseName: prometheus-adapter
+  chart:
+    repository: https://kubernetes-charts.storage.googleapis.com/
+    name: prometheus-adapter
+    version: 1.4.0
+  values:
+    prometheus:
+      url: http://appmesh-prometheus.appmesh-system.svc
+      port: 9090
