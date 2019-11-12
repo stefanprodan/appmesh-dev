@@ -148,6 +148,9 @@ spec:
         - --git-label=flux
         - --git-user=fluxcd
         - --git-email=stefanprodan@users.noreply.github.com
+        - --git-poll-interval=1m
+        - --sync-interval=1m
+        - --automation-interval=1m
 
         # Include these two to enable git commit signing
         # - --git-gpg-key-import=/root/gpg-import
