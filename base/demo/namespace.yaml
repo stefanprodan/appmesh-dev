@@ -3,6 +3,6 @@ kind: Namespace
 metadata:
   name: demo
   annotations:
-    fluxcd.io/ignore: "true"
+    fluxcd.io/ignore: "false"
   labels:
     appmesh.k8s.aws/sidecarInjectorWebhook: enabled
