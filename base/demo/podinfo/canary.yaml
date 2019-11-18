@@ -46,6 +46,11 @@ spec:
     # canary increment step
     # percentage (0-100)
     stepWeight: 5
+    # canary match condition
+    match:
+      - headers:
+          user-agent:
+            regex: "(?=.*Safari)(?!.*Chrome).*$"
     # App Mesh Prometheus checks
     metrics:
       - name: request-success-rate
