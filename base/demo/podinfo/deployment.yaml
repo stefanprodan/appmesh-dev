@@ -31,7 +31,7 @@ spec:
         imagePullPolicy: IfNotPresent
         env:
           - name: PODINFO_UI_LOGO
-            value: https://eks.handson.flagger.dev/cuddle_bunny.gif
+            value: https://eks.handson.flagger.dev/cuddle_clap.gif
           - name: PODINFO_UI_COLOR
             value: "#34577c"
         ports:
