@@ -14,3 +14,5 @@ spec:
       create: true
       name: "stefanxappmesh"
       discovery: dns
+    image:
+      tag: v0.3.0

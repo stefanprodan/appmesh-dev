@@ -9,3 +9,6 @@ spec:
     git: https://github.com/aws/eks-charts
     ref: master
     path: stable/appmesh-controller
+  values:
+    image:
+      tag: v0.3.0
