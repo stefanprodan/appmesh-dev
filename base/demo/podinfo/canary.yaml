@@ -34,6 +34,7 @@ spec:
       attempts: 3
       perTryTimeout: 1s
       retryOn: "gateway-error,client-error,stream-error"
+  skypAnalysis: true
   # define the canary analysis timing and KPIs
   canaryAnalysis:
     interval: 10s
