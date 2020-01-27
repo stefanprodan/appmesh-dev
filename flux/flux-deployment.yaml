@@ -148,7 +148,7 @@ spec:
         # to those under the following relative paths in the git repository
         # - --git-path=subdir1,subdir2
         - --git-label=flux
-        - --git-user=fluxcd
+        - --git-user=flux
         - --git-email=stefanprodan@users.noreply.github.com
 
         # Include these two to enable git commit signing
