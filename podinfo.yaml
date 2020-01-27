@@ -1,0 +1,17 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: podinfo
+  namespace: default
+spec:
+  releaseName: podinfo
+  chart:
+    repository: https://stefanprodan.github.io/podinfo
+    name: podinfo
+    version: 3.2.0
+  values:
+    hpa:
+      enabled: true
+      maxReplicas: 2
+      cpu: 90
+      memory: 200Mi
